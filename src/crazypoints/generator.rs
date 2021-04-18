@@ -8,7 +8,7 @@ use crate::common::Particle;
 use crate::common::Vec2;
 
 // TODO Use Vec2 instead of width and height
-pub fn generate(width: u32, height: u32, max_it: Option<u32>) -> Document {
+pub fn generate(width: u32, height: u32, max_it: Option<u32>, sync: bool) -> Document {
     let particle1 = Particle::new(Vec2(0.0, 0.0), Vec2(0.0, 10.0));
     let particle2 = Particle::new(Vec2(800.0, 800.0), Vec2(0.0, -10.0));
 
@@ -19,8 +19,8 @@ pub fn generate(width: u32, height: u32, max_it: Option<u32>) -> Document {
     let mut rng = rand::thread_rng();
 
     match max_it {
-        Some(it) => run_n_iterations(&mut document, &mut particles, &mut rng, it),
-        None => run_all(&mut document, &mut particles, &mut rng, height),
+        Some(it) => run_n_iterations(&mut document, &mut particles, &mut rng, it, sync),
+        None => run_all(&mut document, &mut particles, &mut rng, height, sync),
     }
 }
 
@@ -29,11 +29,12 @@ fn run_all(
     particles: &mut Vec<Particle>,
     rng: &mut ThreadRng,
     height: u32, // TODO Use Vec2
+    sync: bool,
 ) -> Document {
     let mut doc = document.clone();
 
     loop {
-        update_all(particles, rng);
+        update_all(particles, rng, sync);
 
         let p1 = particles[0].position();
         let p2 = particles[1].position();
@@ -55,11 +56,12 @@ fn run_n_iterations(
     particles: &mut Vec<Particle>,
     rng: &mut ThreadRng,
     max_it: u32,
+    sync: bool,
 ) -> Document {
     let mut doc = document.clone();
 
     for _it in 0..max_it {
-        update_all(particles, rng);
+        update_all(particles, rng, sync);
 
         let p1 = particles[0].position();
         let p2 = particles[1].position();
@@ -89,9 +91,15 @@ fn create_line(p1: Vec2, p2: Vec2) -> Line {
         .set("stroke-width", 3)
 }
 
-fn update_all(particles: &mut Vec<Particle>, rng: &mut ThreadRng) -> Vec<Vec2> {
+fn update_all(particles: &mut Vec<Particle>, rng: &mut ThreadRng, sync: bool) -> Vec<Vec2> {
+    let step = sync.then(|| random_step(rng));
+
     particles
         .iter_mut()
-        .map(|p| p.update(rng.gen::<f64>() * 3.0 + 1.0))
+        .map(|p| p.update(step.unwrap_or(random_step(rng))))
         .collect()
+}
+
+fn random_step(rng: &mut ThreadRng) -> f64 {
+    rng.gen::<f64>() * 3.0 + 1.0
 }
