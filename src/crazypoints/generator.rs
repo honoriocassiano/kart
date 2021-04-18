@@ -8,8 +8,8 @@ use crate::common::Particle;
 use crate::common::Vec2;
 
 pub fn generate(width: u32, height: u32, max_it: u32) -> Document {
-    let particle1 = Particle::new(Vec2(450.0, 0.0), Vec2(0.0, 20.0));
-    let particle2 = Particle::new(Vec2(550.0, 800.0), Vec2(0.0, -20.0));
+    let particle1 = Particle::new(Vec2(0.0, 300.0), Vec2(0.0, 10.0));
+    let particle2 = Particle::new(Vec2(800.0, 500.0), Vec2(0.0, -10.0));
 
     let mut particles = vec![particle1, particle2];
 
