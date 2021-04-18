@@ -1,4 +1,10 @@
 mod common;
 mod crazypoints;
 
-fn main() {}
+use crazypoints::generate;
+
+fn main() {
+    let document = generate(800, 800, 50);
+
+    svg::save("image.svg", &document).unwrap();
+}
