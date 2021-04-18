@@ -10,9 +10,9 @@ impl Particle {
         Self { position, velocity }
     }
 
-    pub fn update(&mut self, dt: f32) -> Vec2 {
-        // TODO Implement this
-        Vec2::zero()
+    pub fn update(&mut self, dt: f64) -> Vec2 {
+        self.position += dt * self.velocity;
+        self.position
     }
 
     pub fn position(&self) -> Vec2 {
