@@ -1,11 +1,11 @@
 mod common;
 mod crazypoints;
 
+use common::Vec2;
 use crazypoints::generate;
 
 fn main() {
-    // let document = generate(800, 800, Some(50), false);
-    let document = generate(800, 800, None, false);
+    let document = generate(Vec2(800.0, 800.0), None, false);
 
     svg::save("image.svg", &document).unwrap();
 }
