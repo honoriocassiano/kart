@@ -1,3 +1,3 @@
-mod generator;
+mod simulation;
 
-pub use generator::Simulation;
+pub use simulation::Simulation;
